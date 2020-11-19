@@ -256,6 +256,14 @@ class Instagram
             $headers['x-csrftoken'] = md5(uniqid()); // this can be whatever, insta doesn't like an empty value
         }
 
+        if (empty($headers['cookie']) && !empty($this->customCookies)) {
+            $cookies = '';
+            foreach ($this->customCookies as $key => $value) {
+                $cookies .= "$key=$value; ";
+            }
+            $headers['cookie'] = $cookies;
+        }
+
         return $headers;
     }
 
