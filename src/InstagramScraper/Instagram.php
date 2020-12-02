@@ -3,6 +3,7 @@
 namespace InstagramScraper;
 
 use Exception;
+use InstagramScraper\Exception\InstagramAccountHasBeenTemporarilyLockedException;
 use InstagramScraper\Exception\InstagramAuthException;
 use InstagramScraper\Exception\InstagramChallengeRecaptchaException;
 use InstagramScraper\Exception\InstagramChallengeSubmitPhoneNumberException;
@@ -1772,6 +1773,8 @@ class Instagram
             throw new InstagramChallengeRecaptchaException('Instagram asked to enter the captcha.', $response->code);
         } elseif (preg_match('/"challengeType":"SubmitPhoneNumberForm"/', $response->raw_body, $matches)) {
             throw new InstagramChallengeSubmitPhoneNumberException('Instagram asked to enter a phone number.', $response->code);
+        } elseif (preg_match('/"challengeType":"AcknowledgeForm"/', $response->raw_body, $matches)) {
+            throw new InstagramAccountHasBeenTemporarilyLockedException('Instagram account has been temporarily locked.', $response->code);
         }
 
         // for 2FA case
